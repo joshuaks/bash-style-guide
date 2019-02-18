@@ -1,33 +1,28 @@
-#!/bin/bash 
+#!/usr/bin/env bash
 
 
-#########################
 # IMPORT ENV VARS HERE ##
-#########################
 
 
 
-#########################
 # ENV SETTINGS ##########
-#########################
 set -e                      # exit all shells if script fails
 set -u                      # exit script if uninitialized variable is used
 set -o pipefail             # exit script if anything fails in pipe
-# set -x;                   # debug mode
+shopt -s failglob           # fail on regex expansion fail
 
 
 
-#########################
 # GLOBALS ###############
-#########################
-declare -ra ARGS=("$@")
+declare -ra ARGS=("${@}")
 
-CALLING_DIRPATH="$(pwd)"; declare -r CALLING_DIRPATH
-SCRIPT_FILENAME="$(basename "${0}")"; declare -r SCRIPT_FILENAME
-SCRIPT_DIRPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"; declare -r SCRIPT_DIRPATH
+CALLING_DIRPATH="$(pwd)"                                            ; declare -r CALLING_DIRPATH
+SCRIPT_FILENAME="$(basename "${0}")"                                ; declare -r SCRIPT_FILENAME
+SCRIPT_DIRPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"  ; declare -r SCRIPT_DIRPATH
+LOG_FILE="/tmp/$(date +%s).log"                                     ; declare -r LOG_FILE
+
 declare -r SCRIPT_FILEPATH="${SCRIPT_DIRPATH}/${SCRIPT_FILENAME}"
 
-LOG_FILE="/tmp/$(date +%s).log"; declare -r LOG_FILE
 
 
 #########################
@@ -43,45 +38,32 @@ function log(){
 }
 
 
-function error_log(){
+function log::error(){
     local -r msg="${1}"
     log "ERROR: ${msg}"
     exit 1
 }
 
 
-function warning_log(){
+function log::warning(){
     local -r msg="${1}"
     log "WARNING (1/2): ${msg}"
     log "WARNING (2/2): continuing"
 }
 
 
-function log_func(){
-    local -r function_name="${1}"
-    log "${function_name}()"
-}
-
-
 function usage(){
-    log_func "${FUNCNAME[0]}"
+    log "USAGE FOO"
 }
 
 
 
-
-#########################
 # FUNCTIONS #############
-#########################
 
 
-#########################
 # INIT ##################
-#########################
 
 function initialize_input(){
-    log_func "${FUNCNAME[0]}"
-
     local -ra args=( "${@}" )
 
     local is_help='false'
@@ -112,30 +94,19 @@ function initialize_input(){
 
 
 function validate_input(){
-    log_func "${FUNCNAME[0]}"
+    log "validate input foo"
 }
 
 
 function initialize(){
-    log_func "${FUNCNAME[0]}"
-    
     initialize_input "${ARGS[@]-}"
 }
 
 
-#########################
 # MAIN ##################
-#########################
-
 function main(){
-    log_func "${FUNCNAME[0]}"
-
     initialize
     
     exit 0
 }
 main
-
-
-
-
